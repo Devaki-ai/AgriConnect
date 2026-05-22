@@ -1,90 +1,141 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Segoe UI', sans-serif;
-    margin: 0;
     background: linear-gradient(135deg, #56ab2f, #a8e063);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px;
 }
 
 .box {
     background: white;
     padding: 30px;
     border-radius: 20px;
-    width: 350px;
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
 h1 {
     color: green;
     margin-bottom: 5px;
+    font-size: 1.8rem;
 }
 
-p {
-    margin-bottom: 15px;
+.subtitle {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
 }
 
 label {
     display: block;
     text-align: left;
-    margin-left: 5%;
-    margin-top: 10px;
-    font-weight: bold;
+    margin-top: 12px;
+    font-weight: 600;
     color: #333;
+    font-size: 0.9rem;
 }
 
 input {
-    width: 90%;
-    padding: 10px;
+    width: 100%;
+    padding: 10px 12px;
     margin-top: 5px;
     border-radius: 8px;
     border: 1px solid #ccc;
     outline: none;
-    transition: 0.3s;
+    font-size: 0.95rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 input:focus {
     border-color: green;
-    box-shadow: 0 0 5px rgba(0,128,0,0.4);
+    box-shadow: 0 0 5px rgba(0, 128, 0, 0.35);
 }
 
 button {
-    margin-top: 20px;
-    padding: 12px 25px;
+    margin-top: 22px;
+    width: 100%;
+    padding: 13px;
     background: green;
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: 0.3s;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.3s, transform 0.2s;
 }
 
 button:hover {
     background: darkgreen;
-    transform: scale(1.07);
+    transform: scale(1.03);
+}
+
+button:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#loading {
+    display: none;
+    margin-top: 15px;
+    color: #555;
+    font-size: 0.95rem;
 }
 
 #result {
     margin-top: 20px;
 }
 
+#result h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
 .card {
     background: #f9f9f9;
-    padding: 12px;
+    padding: 14px;
     margin-top: 10px;
     border-radius: 12px;
     text-align: left;
-    transition: 0.3s;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e0e0e0;
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
 
-.top {
+.card.top {
     border: 2px solid green;
     background: #eaffea;
+}
+
+.card b {
+    font-size: 1rem;
+    color: #222;
+}
+
+.card p {
+    margin-top: 5px;
+    font-size: 0.88rem;
+    color: #444;
+    line-height: 1.5;
+}
+
+.error {
+    color: red;
+    font-weight: 600;
+    margin-top: 15px;
 }

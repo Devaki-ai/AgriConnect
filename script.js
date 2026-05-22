@@ -1,65 +1,72 @@
-function predict() {
+async function predict() {
+    const fields = ["n", "p", "k", "temp", "hum", "ph", "rain"];
+    const values = {};
 
-    let N = document.getElementById("N").value;
-    let P = document.getElementById("P").value;
-    let K = document.getElementById("K").value;
-    let temp = document.getElementById("temp").value;
-    let humidity = document.getElementById("humidity").value;
-    let ph = document.getElementById("ph").value;
-    let rainfall = document.getElementById("rainfall").value;
-
-    // 🔴 Validation
-    if (!N || !P || !K || !temp || !humidity || !ph || !rainfall) {
-        alert("⚠️ Please fill all fields");
-        return;
+    // Validate all fields
+    for (const id of fields) {
+        const val = document.getElementById(id).value.trim();
+        if (val === "") {
+            alert("⚠️ Please fill all fields!");
+            return;
+        }
+        values[id] = Number(val);
     }
 
-    // Show loading
-    document.getElementById("loading").style.display = "block";
-    document.getElementById("result").innerHTML = "";
+    const btn = document.getElementById("predictBtn");
+    const loading = document.getElementById("loading");
+    const result = document.getElementById("result");
 
-    let data = {
-        N: +N,
-        P: +P,
-        K: +K,
-        temperature: +temp,
-        humidity: +humidity,
-        ph: +ph,
-        rainfall: +rainfall
-    };
+    btn.disabled = true;
+    loading.style.display = "block";
+    result.innerHTML = "";
 
-    fetch("http://127.0.0.1:5000/predict", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(result => {let html = `<h2>🌾 Top 3 Recommended Crops</h2>`;
+    try {
+        const response = await fetch("http://127.0.0.1:5000/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                N: values.n,
+                P: values.p,
+                K: values.k,
+                temperature: values.temp,
+                humidity: values.hum,
+                ph: values.ph,
+                rainfall: values.rain
+            })
+        });
 
-result.top3.forEach(crop => {
-    let d = result.details[crop] || {};
+        const data = await response.json();
 
-    html += `
-    <div style="margin-bottom:15px;">
-        <h3>${crop}</h3>
-        <p><b>Variety:</b> ${d.variety || "-"}</p>
-        <p><b>Duration:</b> ${d.duration || "-"}</p>
-        <p><b>Water:</b> ${d.water || "-"}</p>
-        <p><b>Profit:</b> ${d.profit || "-"}</p>
-        <p><b>Benefits:</b> ${(d.benefits || []).join(", ")}</p>
-    </div>
-    `;
-});
+        if (data.error) {
+            result.innerHTML = `<p class="error">❌ ${data.error}</p>`;
+            return;
+        }
 
-document.getElementById("result").innerHTML = html;}
-        // 🔥 Hide loading
-        
-    )
-    .catch(err => {
-        document.getElementById("loading").style.display = "none";
-        alert("❌ Error connecting to server");
-        console.log(err);
-    });
+        let html = "<h3>🌾 Recommended Crops</h3>";
+
+        data.top3.forEach((crop, index) => {
+            const info = data.details[crop] || {};
+            const isTop = index === 0;
+
+            html += `
+                <div class="card ${isTop ? "top" : ""}">
+                    <b>${isTop ? "👑 " : ""}${crop.toUpperCase()}</b>
+                    <p>🌱 <b>Variety:</b> ${info.variety || "-"}</p>
+                    <p>⏱ <b>Duration:</b> ${info.duration || "-"}</p>
+                    <p>${info.water || "-"} <b>Water:</b> ${info.water || "-"}</p>
+                    <p>💰 <b>Profit:</b> ${info.profit || "-"}</p>
+                    <p>✅ <b>Benefits:</b> ${(info.benefits || []).join(", ")}</p>
+                </div>
+            `;
+        });
+
+        result.innerHTML = html;
+
+    } catch (err) {
+        result.innerHTML = `<p class="error">❌ Could not connect to server. Make sure the backend is running.</p>`;
+        console.error(err);
+    } finally {
+        btn.disabled = false;
+        loading.style.display = "none";
+    }
 }
