@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AgriConnect</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #56ab2f, #a8e063);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: green;
+            margin-bottom: 5px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-left: 5%;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: green;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: green;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: darkgreen;
+            transform: scale(1.05);
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f9f9f9;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .top {
+            border: 2px solid green;
+            background: #eaffea;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>🌾 AgriConnect</h1>
+    <p>Enter Soil Details</p>
+
+    <label>Nitrogen (N)</label>
+    <input type="number" id="n" placeholder="Enter value">
+
+    <label>Phosphorus (P)</label>
+    <input type="number" id="p" placeholder="Enter value">
+
+    <label>Potassium (K)</label>
+    <input type="number" id="k" placeholder="Enter value">
+
+    <label>Temperature</label>
+    <input type="number" id="temp" placeholder="Enter value">
+
+    <label>Humidity</label>
+    <input type="number" id="hum" placeholder="Enter value">
+
+    <label>pH</label>
+    <input type="number" id="ph" placeholder="Enter value">
+
+    <label>Rainfall</label>
+    <input type="number" id="rain" placeholder="Enter value">
+
+    <button onclick="predict()">Predict</button>
+
+    <div id="result"></div>
+
+</div>
+
+<script>
+function predict() {
+
+    const n = document.getElementById("n").value;
+    const p = document.getElementById("p").value;
+    const k = document.getElementById("k").value;
+    const temp = document.getElementById("temp").value;
+    const hum = document.getElementById("hum").value;
+    const ph = document.getElementById("ph").value;
+    const rain = document.getElementById("rain").value;
+
+    if (!n || !p || !k || !temp || !hum || !ph || !rain) {
+        alert("Please fill all fields!");
+        return;
+    }
+
+    document.getElementById("result").innerHTML = "⏳ Predicting...";
+
+    fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            N: Number(n),
+            P: Number(p),
+            K: Number(k),
+            temperature: Number(temp),
+            humidity: Number(hum),
+            ph: Number(ph),
+            rainfall: Number(rain)
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        let output = "<h3>🌾 Recommended Crops</h3>";
+
+        data.top3.forEach((crop, index) => {
+            const info = data.details[crop] || {};
+
+            output += `
+                <div class="card ${index === 0 ? 'top' : ''}">
+                    <b>${index === 0 ? "👑 " : ""}${crop.toUpperCase()}</b><br>
+                    Variety: ${info.variety || "-"}<br>
+                    Duration: ${info.duration || "-"}<br>
+                    Water: ${info.water || "-"}<br>
+                    Profit: ${info.profit || "-"}<br>
+                    Benefits: ${(info.benefits || []).join(", ")}
+                </div>
+            `;
+        });
+
+        document.getElementById("result").innerHTML = output;
+    })
+    .catch(() => {
+        document.getElementById("result").innerHTML = "❌ Server error";
+    });
+}
+</script>
+
+</body>
+</html>

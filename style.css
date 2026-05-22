@@ -1,0 +1,90 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #56ab2f, #a8e063);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 350px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+h1 {
+    color: green;
+    margin-bottom: 5px;
+}
+
+p {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin-left: 5%;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: green;
+    box-shadow: 0 0 5px rgba(0,128,0,0.4);
+}
+
+button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: green;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: darkgreen;
+    transform: scale(1.07);
+}
+
+#result {
+    margin-top: 20px;
+}
+
+.card {
+    background: #f9f9f9;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 12px;
+    text-align: left;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0,0,0,0.2);
+}
+
+.top {
+    border: 2px solid green;
+    background: #eaffea;
+}
